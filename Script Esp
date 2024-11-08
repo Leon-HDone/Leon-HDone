@@ -1,0 +1,66 @@
+Esp Scipt (its NEW) Updatets coming soon...
+
+local Players = gameGetService(Players)
+local LocalPlayer = Players.LocalPlayer
+
+
+local function createESPLabel(player)
+    
+    if player.Character and player.CharacterFindFirstChild(Head) then
+        local head = player.Character.Head
+        
+        local billboardGui = Instance.new(BillboardGui)
+        billboardGui.Name = ESPLabel
+        billboardGui.Adornee = head
+        billboardGui.Size = UDim2.new(0, 200, 0, 50)
+        billboardGui.StudsOffset = Vector3.new(0, 2, 0) 
+        billboardGui.AlwaysOnTop = true
+        
+        local nameLabel = Instance.new(TextLabel)
+        nameLabel.Parent = billboardGui
+        nameLabel.Size = UDim2.new(1, 0, 1, 0)
+        nameLabel.BackgroundTransparency = 1
+        nameLabel.Text = player.Name
+        nameLabel.TextColor3 = Color3.new(1, 1, 1)  
+        nameLabel.TextStrokeTransparency = 0.5  
+        nameLabel.TextScaled = true
+        
+        billboardGui.Parent = head
+    end
+end
+
+local function removeESPLabes()
+    for _, player in pairs(PlayersGetPlayers()) do
+        if player.Character and player.CharacterFindFirstChild(Head) then
+            local head = player.Character.Head
+            if headFindFirstChild(ESPLabel) then
+                headFindFirstChild(ESPLabel)Destroy()
+            end
+        end
+    end
+end
+
+LocalPlayer.ChattedConnect(function(message)
+    if message == esp then
+        print(ESP aktiviert - Spielernamen werden angezeigt.)
+    
+        for _, player in pairs(PlayersGetPlayers()) do
+            if player ~= LocalPlayer then 
+                createESPLabel(player)
+            end
+        end
+    elseif message == esp off then
+        print(ESP deaktiviert.)
+        removeESPLabes()
+    end
+end)
+
+Players.PlayerAddedConnect(function(player)
+    player.CharacterAddedConnect(function()
+        createESPLabel(player)
+    end)
+end)
+
+Players.PlayerRemovingConnect(function(player)
+    removeESPLabes()
+end)
